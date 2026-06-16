@@ -1,5 +1,6 @@
 # Confidential source inputs and generated data outputs
 /data/
+/ADB_Innovation_Maharashtra.geojson
 /ADB_Innovation_*.geojson
 /Road_Safety_Performance_Indicators_*.gpkg
 /Road_Safety_Performance_Indicators_*.xlsx
