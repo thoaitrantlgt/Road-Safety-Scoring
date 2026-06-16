@@ -1,12 +1,38 @@
-# Local/generated data and confidential source inputs
-data/
-*.geojson
-*.gpkg
-*.xlsx
-*.xls
+# Confidential source inputs and generated data outputs
+/data/
+/ADB_Innovation_*.geojson
+/Road_Safety_Performance_Indicators_*.gpkg
+/Road_Safety_Performance_Indicators_*.xlsx
+
+# Tabular/model artifacts that may contain derived or sensitive data
 *.csv
 *.parquet
 *.pkl
+*.joblib
+*.feather
+*.sqlite
+*.db
+
+# GIS artifacts
+*.geojson
+*.gpkg
+*.gpkg-shm
+*.gpkg-wal
+*.shp
+*.shx
+*.dbf
+*.prj
+*.cpg
+*.qix
+*.sbn
+*.sbx
+*.kml
+*.kmz
+
+# Spreadsheets and local exports
+*.xlsx
+*.xls
+*.xlsm
 
 # Python caches and local runtime files
 __pycache__/
