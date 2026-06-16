@@ -1,0 +1,41 @@
+{
+  "project_name": "ADB Speed Safety Score",
+  "alignment_manifest": "data/processed/alignment/alignment_manifest.json",
+  "input_geojson": "data/processed/alignment/road_network_aligned.geojson",
+  "outputs": {
+    "features_dir": "data/processed/features",
+    "features_csv": "data/processed/features/features.csv",
+    "features_parquet": "data/processed/features/features.parquet",
+    "feature_geojson": "data/processed/features/road_network_features.geojson",
+    "summary_json": "data/processed/features/feature_summary.json",
+    "data_dictionary_md": "data/processed/features/data_dictionary.md",
+    "manifest_json": "data/processed/features/features_manifest.json"
+  },
+  "speeding_pressure": {
+    "output_scale": 100.0,
+    "sample_weight_percentile": 95,
+    "missing_value": null
+  },
+  "vru_exposure": {
+    "road_class_weights": {
+      "motorway": 0.15,
+      "trunk": 0.35,
+      "primary": 0.65,
+      "secondary": 0.85
+    },
+    "land_use_weights": {
+      "urban": 1.0,
+      "suburban": 0.75,
+      "mixed": 0.65,
+      "rural": 0.35,
+      "unknown": 0.45
+    },
+    "road_class_weight": 0.45,
+    "land_use_weight": 0.45,
+    "urban_percent_weight": 0.1
+  },
+  "quality": {
+    "minimum_weighted_sample": 30,
+    "minimum_sample_size_total": 30
+  }
+}

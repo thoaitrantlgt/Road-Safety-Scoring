@@ -1,0 +1,18 @@
+{
+  "stage": "Deliverable Packaging",
+  "generated_at": "2026-06-11T04:08:55.397844+00:00",
+  "outputs": {
+    "deliverables_dir": "deliverables",
+    "executive_summary_md": "deliverables/executive_summary.md",
+    "technical_report_md": "deliverables/technical_report.md",
+    "geospatial_visualization_md": "deliverables/geospatial_visualization.md",
+    "arcgis_readme_md": "deliverables/arcgis_publish_notes.md",
+    "manifest_json": "deliverables/deliverables_manifest.json"
+  },
+  "source_manifests": {
+    "alignment_manifest": "data/processed/alignment/alignment_manifest.json",
+    "features_manifest": "data/processed/features/features_manifest.json",
+    "scoring_manifest": "data/processed/scoring/scoring_manifest.json",
+    "visualization_manifest": "data/processed/visualization/visualization_manifest.json"
+  }
+}

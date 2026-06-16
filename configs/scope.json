@@ -1,0 +1,46 @@
+{
+  "project_name": "ADB Speed Safety Score",
+  "snapshot_label": "local_adb_road_safety_inputs_2026_06_10",
+  "target_crs": "EPSG:4326",
+  "target_road_classes": [
+    "motorway",
+    "trunk",
+    "primary",
+    "secondary"
+  ],
+  "inputs": [
+    {
+      "area": "Thailand",
+      "road_geojson": "ADB_Innovation_Thailand.geojson",
+      "source_gpkg": "Road_Safety_Performance_Indicators__Thailand_(Feature).gpkg",
+      "notes": "GeoJSON road layer exported from the Thailand feature package."
+    },
+    {
+      "area": "Maharashtra",
+      "road_geojson": "ADB_Innovation_Maharashtra.geojson",
+      "source_gpkg": "Road_Safety_Performance_Indicators__Maharashtra_(Feature).gpkg",
+      "notes": "GeoJSON road layer exported from the Maharashtra feature package."
+    }
+  ],
+  "outputs": {
+    "alignment_dir": "data/processed/alignment",
+    "aligned_geojson": "data/processed/alignment/road_network_aligned.geojson",
+    "summary_csv": "data/processed/alignment/road_network_aligned_summary.csv",
+    "schema_report_json": "data/processed/alignment/schema_report.json",
+    "manifest_json": "data/processed/alignment/alignment_manifest.json"
+  },
+  "alignment_required_fields": [
+    "road_id",
+    "road_class",
+    "geometry"
+  ],
+  "alignment_quality_fields": [
+    "road_length_m",
+    "speed_limit_kmh",
+    "median_speed_kmh",
+    "v85_speed_kmh",
+    "percent_over_limit",
+    "weighted_sample",
+    "land_use"
+  ]
+}

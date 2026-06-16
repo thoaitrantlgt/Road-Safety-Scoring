@@ -1,0 +1,35 @@
+{
+  "project_name": "ADB Speed Safety Score",
+  "features_parquet": "data/processed/features/features.parquet",
+  "feature_geojson": "data/processed/features/road_network_features.geojson",
+  "outputs": {
+    "scoring_dir": "data/processed/scoring",
+    "scored_csv": "data/processed/scoring/scored_segments.csv",
+    "scored_parquet": "data/processed/scoring/scored_segments.parquet",
+    "scored_geojson": "data/processed/scoring/safety_scored_network.geojson",
+    "metrics_json": "data/processed/scoring/model_metrics.json",
+    "feature_importance_csv": "data/processed/scoring/feature_importance.csv",
+    "critical_segments_csv": "data/processed/scoring/critical_segments.csv",
+    "model_pickle": "data/processed/scoring/safety_model.pkl",
+    "manifest_json": "data/processed/scoring/scoring_manifest.json"
+  },
+  "target": {
+    "speed_variance_weight": 0.45,
+    "speeding_pressure_weight": 0.35,
+    "vru_exposure_weight": 0.2,
+    "critical_threshold": 75.0,
+    "moderate_threshold": 46.0
+  },
+  "model": {
+    "random_state": 42,
+    "max_iter": 240,
+    "learning_rate": 0.06,
+    "max_leaf_nodes": 31,
+    "l2_regularization": 0.05
+  },
+  "evaluation": {
+    "spatial_group_size": 1000,
+    "max_cv_splits": 5,
+    "critical_threshold": 75.0
+  }
+}

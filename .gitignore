@@ -1,0 +1,22 @@
+# Local/generated data and confidential source inputs
+data/
+*.geojson
+*.gpkg
+*.xlsx
+*.xls
+*.csv
+*.parquet
+*.pkl
+
+# Python caches and local runtime files
+__pycache__/
+*.py[cod]
+.pytest_cache/
+
+# Local agent/tool state
+.codex/
+.agents/
+
+# OS/editor noise
+.DS_Store
+Thumbs.db

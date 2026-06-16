@@ -1,0 +1,18 @@
+{
+  "project_name": "ADB Speed Safety Score",
+  "scored_geojson": "data/processed/scoring/safety_scored_network.geojson",
+  "metrics_json": "data/processed/scoring/model_metrics.json",
+  "outputs": {
+    "visualization_dir": "data/processed/visualization",
+    "index_html": "data/processed/visualization/index.html",
+    "readme_md": "data/processed/visualization/README.md",
+    "map_html": "data/processed/visualization/safety_score_map.html",
+    "map_data_json": "data/processed/visualization/map_segments.json",
+    "priority_segments_csv": "data/processed/visualization/highest_priority_segments.csv",
+    "manifest_json": "data/processed/visualization/visualization_manifest.json"
+  },
+  "map": {
+    "max_segments": 18000,
+    "max_points_per_segment": 36
+  }
+}
