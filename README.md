@@ -1,157 +1,87 @@
 # Road Speed Safety Scoring
 
-Pipeline for scoring road segments by speed-safety risk and prioritizing locations for speed-limit review or intervention.
+[![Python](https://img.shields.io/badge/Python-3.10%2B-3776AB?logo=python&logoColor=white)](https://www.python.org/)
+[![pandas](https://img.shields.io/badge/pandas-data%20processing-150458?logo=pandas&logoColor=white)](https://pandas.pydata.org/)
+[![scikit-learn](https://img.shields.io/badge/scikit--learn-ML-F7931E?logo=scikitlearn&logoColor=white)](https://scikit-learn.org/)
+[![GeoJSON](https://img.shields.io/badge/GeoJSON-geospatial-5A7F35)](https://geojson.org/)
+[![HTML5](https://img.shields.io/badge/HTML5-interactive%20map-E34F26?logo=html5&logoColor=white)](https://developer.mozilla.org/en-US/docs/Web/HTML)
 
-This project builds an end-to-end geospatial workflow that standardizes road network inputs, engineers safe-system speed features, trains an interpretable scoring model, and exports policy-ready tables, GeoJSON, reports, and an interactive priority map.
+An end-to-end geospatial pipeline for scoring road segments by speed-safety risk and prioritizing locations for speed-limit review or intervention.
 
-## Problem
+The project standardizes road network inputs, engineers safe-system speed features, trains an interpretable scoring model, and exports policy-ready tables, GeoJSON layers, markdown reports, and an interactive HTML priority map.
 
-The goal is to evaluate the relative speed-safety risk of each road segment, not to predict crashes directly. The pipeline produces:
+## What It Does
 
-- `speed_safety_score`: 0-100 operational risk score.
-- `risk_band`: `Low`, `Moderate`, or `Critical`.
-- Ranked priority segments for speed-limit review or intervention.
-- Interactive HTML map for inspecting high-priority corridors.
+This is a road-segment risk scoring workflow. It is designed to answer:
 
-The current implementation does not use crash ground truth labels. Instead, it creates a policy-derived surrogate target from speed variance, speeding pressure, and vulnerable road user exposure.
+- Which road segments show stronger speed-safety risk signals?
+- Where are speeding pressure, speed variance, and vulnerable road user exposure highest?
+- Which segments should be prioritized for speed-limit review, traffic calming, or enforcement?
 
-## Pipeline
+The main outputs are:
 
-```text
-raw road network inputs
-  -> ETL and spatial alignment
-  -> safe-system feature engineering
-  -> policy-derived target and model scoring
-  -> interactive geospatial visualization
-  -> deliverable packaging
+| Output | Meaning |
+| --- | --- |
+| `speed_safety_score` | 0-100 operational speed-safety risk score |
+| `risk_band` | `Low`, `Moderate`, or `Critical` |
+| `safety_scored_network.geojson` | Scored geospatial road network |
+| `highest_priority_segments.csv` | Ranked review/intervention list |
+| `safety_score_map.html` | Standalone interactive map |
+
+## Pipeline Architecture
+
+```mermaid
+flowchart LR
+    A[Raw road network inputs] --> B[ETL and spatial alignment]
+    B --> C[Safe-system feature engineering]
+    C --> D[Policy-derived risk target]
+    D --> E[Gradient boosting scoring model]
+    E --> F[Scored GeoJSON and tables]
+    F --> G[Interactive priority map]
+    F --> H[Markdown deliverables]
+
+    C -.-> C1[Speed variance]
+    C -.-> C2[Speeding pressure]
+    C -.-> C3[VRU exposure]
 ```
+
+## Tech Stack
+
+| Area | Tools |
+| --- | --- |
+| Data processing | Python, pandas, NumPy |
+| Machine learning | scikit-learn, `HistGradientBoostingRegressor` |
+| Geospatial format | GeoJSON, GeoPackage-compatible inputs |
+| Outputs | CSV, Parquet, GeoJSON, Markdown |
+| Visualization | Standalone HTML, CSS, Canvas JavaScript |
 
 ## Repository Structure
 
 ```text
 configs/       JSON configuration for each pipeline stage
-scripts/       ETL, feature engineering, scoring, visualization, packaging scripts
+scripts/       ETL, features, scoring, visualization, packaging
 deliverables/  Markdown reports generated from pipeline outputs
-plan.md        Project implementation plan and notes
+README.md      Project overview and usage guide
 ```
 
-Generated data and confidential source inputs are intentionally excluded from Git.
+Local source data and generated outputs are intentionally excluded from the repository.
 
 ## Data Privacy
 
-The repository is configured to ignore local source data and generated artifacts, including:
+This repository is intended to contain code, configuration, and public-safe documentation only.
 
-- `data/`
-- raw `.geojson`, `.gpkg`, and spreadsheet inputs
-- derived `.csv`, `.parquet`, and model files
-- GIS sidecar files such as `.shp`, `.dbf`, `.shx`, and `.prj`
+Do not commit:
 
-Do not commit raw road network data, processed outputs, model artifacts, credentials, or local exports.
+- raw road network inputs
+- `data/` outputs
+- `.geojson`, `.gpkg`, `.csv`, `.parquet`, `.pkl`, spreadsheet, or GIS sidecar files
+- credentials, local exports, or generated model artifacts
 
-## Main Stages
+The pipeline expects those files to exist locally when running, but they should remain outside version control.
 
-### 1. Alignment
+## Quick Start
 
-Script:
-
-```bash
-python scripts/alignment.py --config configs/scope.json
-```
-
-Standardizes road inputs into a shared schema, filters target road classes, validates line geometries, and writes the aligned road network.
-
-Main output:
-
-```text
-data/processed/alignment/road_network_aligned.geojson
-```
-
-### 2. Feature Engineering
-
-Script:
-
-```bash
-python scripts/features.py --config configs/features.json
-```
-
-Creates safe-system features such as:
-
-- `speed_variance_kmh`
-- `sample_confidence`
-- `speeding_pressure`
-- `vru_exposure_index`
-- `feature_quality_flag`
-
-Main output:
-
-```text
-data/processed/features/features.parquet
-```
-
-### 3. Scoring
-
-Script:
-
-```bash
-python scripts/scoring.py --config configs/scoring.json
-```
-
-Builds a policy-derived `risk_target`, trains a `HistGradientBoostingRegressor`, scores all road segments, and applies policy guardrails for clearly unsafe operating conditions.
-
-Main outputs:
-
-```text
-data/processed/scoring/scored_segments.csv
-data/processed/scoring/safety_scored_network.geojson
-data/processed/scoring/model_metrics.json
-```
-
-### 4. Visualization
-
-Script:
-
-```bash
-python scripts/visualization.py --config configs/visualization.json
-```
-
-Builds a standalone interactive HTML map with risk-band filters, pan/zoom, segment details, and top-priority review list.
-
-Main output:
-
-```text
-data/processed/visualization/index.html
-```
-
-Optional local server:
-
-```bash
-python scripts/serve_visualization.py
-```
-
-Then open:
-
-```text
-http://127.0.0.1:8094/data/processed/visualization/
-```
-
-### 5. Deliverables
-
-Script:
-
-```bash
-python scripts/package_outputs.py --config configs/package.json
-```
-
-Generates project-facing markdown reports:
-
-```text
-deliverables/executive_summary.md
-deliverables/technical_report.md
-deliverables/geospatial_visualization.md
-deliverables/arcgis_publish_notes.md
-```
-
-## Run The Full Pipeline
+Run the complete workflow:
 
 ```bash
 python scripts/run_pipeline.py
@@ -163,7 +93,23 @@ Run from a later stage:
 python scripts/run_pipeline.py --from-step scoring
 ```
 
-## Model Notes
+Available stages:
+
+```text
+alignment -> features -> scoring -> visualization -> deliverables
+```
+
+## Stage Guide
+
+| Stage | Command | Main purpose |
+| --- | --- | --- |
+| Alignment | `python scripts/alignment.py --config configs/scope.json` | Normalize schemas, filter target road classes, validate geometries |
+| Features | `python scripts/features.py --config configs/features.json` | Build speed variance, speeding pressure, VRU exposure, quality flags |
+| Scoring | `python scripts/scoring.py --config configs/scoring.json` | Train scoring model and assign risk bands |
+| Visualization | `python scripts/visualization.py --config configs/visualization.json` | Build standalone interactive priority map |
+| Deliverables | `python scripts/package_outputs.py --config configs/package.json` | Generate markdown reports and publish notes |
+
+## Model Summary
 
 The scoring model is a scikit-learn pipeline:
 
@@ -174,18 +120,93 @@ ColumnTransformer
   -> HistGradientBoostingRegressor
 ```
 
-The model learns a policy-derived target rather than observed crash labels. Evaluation metrics therefore measure how well the model reproduces the scoring target and prioritization logic, not crash prediction accuracy.
+The model predicts a policy-derived `risk_target` built from:
+
+| Component | Signal |
+| --- | --- |
+| `speed_variance_kmh` | Difference between V85 speed and median speed |
+| `speeding_pressure` | Share of over-limit travel adjusted by sample confidence |
+| `vru_exposure_index` | Rule-based vulnerable road user exposure proxy |
+
+Important caveat: the current project does not use observed crash ground truth labels. Evaluation metrics show how well the model reproduces the scoring target and prioritization logic, not crash prediction accuracy.
+
+## Feature Highlights
+
+| Feature | Description |
+| --- | --- |
+| `speed_variance_kmh` | `max(v85_speed_kmh - median_speed_kmh, 0)` |
+| `sample_confidence` | Log-scaled confidence from weighted sample size |
+| `speeding_pressure` | Over-limit percentage weighted by sample confidence |
+| `vru_exposure_index` | Exposure proxy using road class, land use, and urban percentage |
+| `feature_quality_flag` | `usable`, `low_sample`, `partial_features`, or `geometry_only` |
+
+## Interactive Map
+
+Build the map:
+
+```bash
+python scripts/visualization.py --config configs/visualization.json
+```
+
+Open the local HTML output:
+
+```text
+data/processed/visualization/index.html
+```
+
+Or serve it locally:
+
+```bash
+python scripts/serve_visualization.py
+```
+
+Then open:
+
+```text
+http://127.0.0.1:8094/data/processed/visualization/
+```
+
+The map includes:
+
+- risk-band filters
+- pan and zoom controls
+- hover/click segment details
+- top-priority segment list
+- recommended intervention language
+
+## Outputs
+
+Typical generated outputs include:
+
+```text
+data/processed/alignment/road_network_aligned.geojson
+data/processed/features/features.parquet
+data/processed/scoring/scored_segments.csv
+data/processed/scoring/safety_scored_network.geojson
+data/processed/visualization/safety_score_map.html
+deliverables/technical_report.md
+deliverables/geospatial_visualization.md
+```
+
+Generated data products are local artifacts and should not be committed.
 
 ## Requirements
 
-The scripts are written in Python and use:
+The scripts require Python plus common data and ML packages:
 
-- `pandas`
-- `numpy`
-- `scikit-learn`
+```text
+pandas
+numpy
+scikit-learn
+pyarrow or fastparquet
+```
 
-Parquet output requires a compatible parquet engine such as `pyarrow` or `fastparquet`.
+Install dependencies in your preferred environment before running the pipeline.
 
-## More Detail
+## Documentation
 
-See `scripts/README.md` for stage-by-stage commands and output paths.
+For stage-by-stage command details and exact output paths, see:
+
+```text
+scripts/README.md
+```
